@@ -1,0 +1,76 @@
+name: openvino-toolkit
+base: ubuntu@24.04
+summary: Intel's OpenVINO Toolkit
+description: |
+  This SDK provides the Intel OpenVINO™ Runtime, Python bindings, and Intel GPU driver support
+  for AI inference workloads in Workshop. OpenVINO runs on CPU by default; the gpu plug enables
+  hardware-accelerated inference on compatible Intel GPUs. arm64 is listed as a build target but
+  is experimental and untested.
+
+adopt-info: openvino
+
+platforms:
+  arm64:
+  amd64:
+
+slots:
+  openvino-libs:
+    interface: mount
+    workshop-source: $SDK
+
+plugs:
+  gpu:
+    interface: gpu
+
+parts:
+  openvino:
+    plugin: cmake
+    source-type: local
+    source: .
+    cmake-parameters:
+      - -DENABLE_PYTHON=ON
+      - -DPython3_EXECUTABLE=/usr/bin/python3.12
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DENABLE_SYSTEM_TBB=ON
+      - -DENABLE_SYSTEM_SNAPPY=ON
+      - -DENABLE_SNAPPY_COMPRESSION=ON
+      - -DCPACK_GENERATOR=DEB
+      - -DENABLE_SAMPLES=OFF
+      - -DENABLE_PYTHON_PACKAGING=ON
+    override-pull: |
+      VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
+      craftctl set version="$VERSION"
+      git clone --branch "$VERSION" --depth 1 \
+        https://github.com/openvinotoolkit/openvino.git .
+      git submodule update --init --recursive
+      craftctl default
+    build-packages:
+      - ca-certificates
+      - file
+      - build-essential
+      - ninja-build
+      - scons
+      - ccache
+      - pkgconf
+      - git
+      - shellcheck
+      - patchelf
+      - fdupes
+      - gzip
+      - lintian
+      - libtbb-dev
+      - libpugixml-dev
+      - ocl-icd-opencl-dev
+      - opencl-headers
+      - rapidjson-dev
+      - libva-dev
+      - libsnappy-dev
+      - python3-pip
+      - python3-venv
+      - python3-setuptools
+      - libpython3-dev
+      - pybind11-dev
+      - libffi-dev
+      - python3-enchant
+      - wget
+      - libsnappy-dev

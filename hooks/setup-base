@@ -1,0 +1,21 @@
+add-apt-repository ppa:kobuk-team/intel-graphics
+apt-get update
+apt-get install ocl-icd-libopencl1 \
+  libtbb12 \
+  libsnappy1v5 \
+  libgl1 \
+  libigc-tools \
+  libigc2 \
+  libigdfcl2 \
+  intel-ocloc \
+  intel-opencl-icd \
+  libze1 \
+  libze-intel-gpu1 \
+  libigdgmm12
+
+echo "$SDK/usr/lib/x86_64-linux-gnu" | tee /etc/ld.so.conf.d/openvino-toolkit.conf
+ldconfig
+
+install -D -m 644 --target-directory=/usr/lib/x86_64-linux-gnu/pkgconfig "$SDK/usr/lib/x86_64-linux-gnu/pkgconfig/openvino.pc"
+
+echo "$SDK/usr/lib/python3/dist-packages" | tee /usr/lib/python3/dist-packages/openvino.pth

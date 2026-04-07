@@ -13,19 +13,31 @@
       "matchStrings": [
         "(?<currentValue>[0-9.]+)"
       ],
-      "depNameTemplate": "TODO_DEP_NAME",
-      "datasourceTemplate": "TODO_DATASOURCE",
+      "depNameTemplate": "openvinotoolkit/openvino",
+      "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
     }
   ],
   "baseBranchPatterns": [
-    "TODO_BRANCH"
+    "2024",
+    "2025",
+    "2026"
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["TODO_DEP_NAME"],
-      "matchBaseBranches": ["TODO_BRANCH"],
-      "allowedVersions": "/^TODO_VERSION_PREFIX\\./"
+      "matchPackageNames": ["openvinotoolkit/openvino"],
+      "matchBaseBranches": ["2024"],
+      "allowedVersions": "/^2024\\./"
+    },
+    {
+      "matchPackageNames": ["openvinotoolkit/openvino"],
+      "matchBaseBranches": ["2025"],
+      "allowedVersions": "/^2025\\./"
+    },
+    {
+      "matchPackageNames": ["openvinotoolkit/openvino"],
+      "matchBaseBranches": ["2026"],
+      "allowedVersions": "/^2026\\./"
     }
   ]
 }
