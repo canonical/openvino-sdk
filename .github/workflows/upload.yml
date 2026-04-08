@@ -21,5 +21,6 @@ jobs:
     with:
       platforms: '["amd64","arm64"]'
       platform-flag: "--build-for"
+      risk: stable
     secrets:
       SDKCRAFT_STORE_CREDENTIALS: ${{ secrets.SDKCRAFT_STORE_CREDENTIALS_STAGING }}
