@@ -16,7 +16,7 @@ A minimal workshop:
 name: openvino-app
 base: ubuntu@24.04
 sdks:
-  - name: openvino-toolkit
+  - name: openvino
     channel: 2025/stable
 
 actions:
@@ -121,7 +121,7 @@ mount the OpenVINO libraries into its own environment:
 name: openvino-consumer
 base: ubuntu@24.04
 sdks:
-  - name: openvino-toolkit
+  - name: openvino
     channel: 2025/stable
   - name: my-inference-app
     channel: all/edge
