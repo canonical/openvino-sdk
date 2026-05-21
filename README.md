@@ -132,7 +132,7 @@ sdks:
 ## Documentation and guidance
 
 - [OpenVINO official documentation](https://docs.openvino.ai)
-- [Workshop documentation](https://canonical-workshop.readthedocs-hosted.com/latest/)
+- [Workshop documentation](https://ubuntu.com/workshop/docs/)
 
 ---
 
@@ -142,7 +142,7 @@ sdks:
 - Intel developer forums:
   [Intel Developer Community](https://community.intel.com/t5/Intel-Distribution-of-OpenVINO/bd-p/distribution-openvino-toolkit)
 - Workshop forum:
-  [Workshop Discourse](https://discourse.canonical.com/c/engineering/workshops/34)
+  [Discourse](https://discourse.ubuntu.com/)
 - Please review our
   [Code of Conduct](https://ubuntu.com/community/ethos/code-of-conduct) before participating.
 
