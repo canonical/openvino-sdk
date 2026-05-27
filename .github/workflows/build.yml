@@ -1,7 +1,7 @@
 name: Build SDK
 
 on:
-  pull_request:
+  pull_request: # temporary to trigger new run
     branches:
       - "[0-9]+"
 
