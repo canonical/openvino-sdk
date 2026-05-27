@@ -11,7 +11,10 @@ apt-get install ocl-icd-libopencl1 \
   intel-opencl-icd \
   libze1 \
   libze-intel-gpu1 \
-  libigdgmm12
+  libigdgmm12 \
+  ocl-icd-libopencl1 \
+  libtbb12 \
+  libsnappy1v5
 
 echo "$SDK/usr/lib/x86_64-linux-gnu" | tee /etc/ld.so.conf.d/openvino-toolkit.conf
 ldconfig
