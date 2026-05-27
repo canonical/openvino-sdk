@@ -37,14 +37,6 @@ This demonstrates a minimal OpenVINO environment that verifies the runtime is av
 3. On launch, the SDK installs Intel GPU compute drivers from the
    `ppa:kobuk-team/intel-graphics` PPA, configures `ldconfig` for OpenVINO shared libraries,
    and registers the Python bindings via a `.pth` file. No user action is needed.
-4. The Python API requires numpy. Install it before using the Python bindings:
-
-```bash
-workshop shell
-sudo apt-get install -y python3-numpy
-```
-
-Python examples below assume you have done this.
 
 ### Verify the runtime
 
