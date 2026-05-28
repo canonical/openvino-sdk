@@ -1,2 +1,4 @@
 # sdkcraft build artifacts
 *.sdk
+
+.spread-reuse.yaml
