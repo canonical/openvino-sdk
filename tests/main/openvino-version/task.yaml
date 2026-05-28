@@ -1,0 +1,15 @@
+summary: openvino python package imports and reports a version
+
+prepare: |
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  # Escape dots so MATCH treats the version literally, not as a regex.
+  EXPECTED_REGEX="${EXPECTED_VERSION//./\\.}"
+  workshop exec -- bash -lc 'python3 -c "import openvino; from importlib.metadata import version; print(version('\''openvino'\''))"' | MATCH "$EXPECTED_REGEX"
+
+debug: |
+  workshop exec -- bash -lc 'python3 -c "import openvino; from importlib.metadata import version; print(version('\''openvino'\''))"' || true
