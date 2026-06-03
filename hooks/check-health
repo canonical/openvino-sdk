@@ -1,14 +1,13 @@
-#!/bin/bash
-set -e
-
 # Verify native library is present
-ldconfig -p | grep -q libopenvino || { workshopctl set-health error "libopenvino not found"; exit 1; }
+if ! ldconfig -p | grep libopenvino >/dev/null; then
+	workshopctl set-health --code="openvino-lib-missing" error "libopenvino not found"
+	exit 0
+fi
 
 # Verify Python bindings are discoverable (the .pth registration worked)
-# Note: cannot import openvino directly -- the package unconditionally imports numpy
-# via openvino/__init__.py -> _ov_api -> data_helpers -> data_dispatcher -> numpy.
-# Using find_spec validates the .pth file and package path without triggering imports.
-python3 -c "import importlib.util; assert importlib.util.find_spec('openvino') is not None" \
-  || { workshopctl set-health error "Python bindings not discoverable"; exit 1; }
+if ! python3 -c "import openvino; import openvino_genai"; then
+	workshopctl set-health --code="openvino-python-missing" error "Python bindings not discoverable"
+	exit 0
+fi
 
 workshopctl set-health okay
