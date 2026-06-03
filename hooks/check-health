@@ -1,11 +1,13 @@
-#!/bin/bash
-set -e
-
 # Verify native library is present
-ldconfig -p | grep -q libopenvino || { workshopctl set-health error "libopenvino not found"; exit 1; }
+if ! ldconfig -p | grep libopenvino >/dev/null; then
+	workshopctl set-health --code="openvino-lib-missing" error "libopenvino not found"
+	exit 0
+fi
 
 # Verify Python bindings are discoverable (the .pth registration worked)
-python3 -c "import openvino; import openvino_genai" \
-  || { workshopctl set-health error "Python bindings not discoverable"; exit 1; }
+if ! python3 -c "import openvino; import openvino_genai"; then
+	workshopctl set-health --code="openvino-python-missing" error "Python bindings not discoverable"
+	exit 0
+fi
 
 workshopctl set-health okay
