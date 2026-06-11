@@ -51,6 +51,11 @@ parts:
       # openvino build requires recent version of setuptools
       pip install --upgrade setuptools --break-system-packages
       craftctl default
+      # Install mo (Model Optimizer) by copying its package directory alongside
+      # ovc and benchmark under the existing openvino/tools/ namespace tree.
+      # The source layout is tools/mo/openvino/tools/mo/ so we copy just that leaf.
+      cp -r "$CRAFT_PART_SRC/tools/mo/openvino/tools/mo" \
+        "$CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/openvino/tools/mo"
     build-packages:
       - ca-certificates
       - file
@@ -89,11 +94,16 @@ parts:
     source: .
     plugin: python
     python-packages:
-      - numpy==2.2.6
+      - numpy==1.26.4
+      - networkx
+      - defusedxml
       - packaging==25.0
     organize:
       lib/python3.12/site-packages/numpy: usr/lib/python3/dist-packages/numpy
       lib/python3.12/site-packages/numpy.libs: usr/lib/python3/dist-packages/numpy.libs
+      lib/python3.12/site-packages/networkx: usr/lib/python3/dist-packages/networkx
+      lib/python3.12/site-packages/defusedxml: usr/lib/python3/dist-packages/defusedxml
+      lib/python3.12/site-packages/openvino_telemetry: usr/lib/python3/dist-packages/openvino_telemetry
       lib/python3.12/site-packages/packaging: usr/lib/python3/dist-packages/packaging
   openvino-tokenizers:
     # build openvino_tokenizers from source to ensure binary compatability with openvino
@@ -102,7 +112,7 @@ parts:
     source: .
     plugin: nil
     build-packages:
-    - libtbb-dev
+      - libtbb-dev
     build-environment:
       - OpenVINO_DIR: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/cmake
     override-pull: |
