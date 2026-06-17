@@ -8,6 +8,7 @@ description: |
   is experimental and untested.
 
 adopt-info: openvino
+website: https://github.com/canonical/openvino-sdk
 
 platforms:
   arm64:
