@@ -22,6 +22,9 @@ slots:
 plugs:
   gpu:
     interface: gpu
+  venv:
+    interface: mount
+    workshop-target: $SDK/venv
 
 parts:
   openvino:
@@ -117,3 +120,10 @@ parts:
       cp -r $CRAFT_PART_BUILD/python $CRAFT_PART_INSTALL
     organize:
       python/openvino_tokenizers: usr/lib/python3/dist-packages/openvino_tokenizers
+  venv:
+    # Provide an empty mountpoint for the venv plug. When a venv is connected
+    # (for example, from the uv SDK) it is mounted here; otherwise the
+    # setup-base hook creates and maintains an SDK-managed venv at this path.
+    plugin: nil
+    override-prime: |
+      mkdir -p "$CRAFT_PRIME/venv"

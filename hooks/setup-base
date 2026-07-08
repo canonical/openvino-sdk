@@ -21,4 +21,5 @@ ldconfig
 
 install -D -m 644 --target-directory=/usr/lib/x86_64-linux-gnu/pkgconfig "$SDK/usr/lib/x86_64-linux-gnu/pkgconfig/openvino.pc"
 
+# Register OpenVINO with the system Python so it is importable without a venv
 echo "$SDK/usr/lib/python3/dist-packages" | tee /usr/lib/python3/dist-packages/openvino.pth

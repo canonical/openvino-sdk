@@ -10,4 +10,13 @@ if ! python3 -c "import openvino; import openvino_genai"; then
 	exit 0
 fi
 
+# Verify OpenVINO is importable from the SDK-managed or provided venv
+venv_path="$SDK/venv"
+if [ -f "$venv_path/pyvenv.cfg" ]; then
+	if ! "$venv_path/bin/python" -c "import openvino; import openvino_genai"; then
+		workshopctl set-health --code="openvino-venv-missing" error "OpenVINO not importable in venv at $venv_path"
+		exit 0
+	fi
+fi
+
 workshopctl set-health okay

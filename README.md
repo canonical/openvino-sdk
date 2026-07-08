@@ -78,6 +78,40 @@ print('GPU available:', 'GPU' in core.available_devices)
 "
 ```
 
+### Using a uv-managed venv
+
+By default, OpenVINO is available to the system Python and to a virtual
+environment that the SDK creates and maintains at `$SDK/venv`. The SDK-managed
+venv is created with `--system-site-packages`, so the OpenVINO packages
+provided by this SDK are importable from it.
+
+If you prefer to manage packages with `uv`, connect the `openvino:venv` plug to
+the `uv` SDK's `venv` slot. When connected, the uv SDK's virtual environment is
+mounted at the OpenVINO SDK's venv path and used as-is, letting you manage
+additional packages with `uv pip`.
+
+To use the venv from a workshop shell, activate it:
+
+```bash
+workshop shell
+source /var/lib/workshop/sdk/openvino/venv/bin/activate
+```
+
+```yaml
+# workshop.yaml
+name: openvino-app
+base: ubuntu@24.04
+sdks:
+  - name: uv
+    channel: latest/stable
+  - name: openvino
+    channel: 2025/stable
+
+connections:
+  - plug: openvino:venv
+    slot: uv:venv
+```
+
 ---
 
 ## Plugs (resources this SDK consumes)
@@ -95,6 +129,21 @@ python3 -c "from openvino import Core; print(Core().available_devices)"
 ```
 
 If GPU is detected, `GPU` appears in the output list alongside `CPU`.
+
+### `venv`
+
+- Interface: `mount`
+- Workshop target: `$SDK/venv`
+- Purpose: Provides the Python virtual environment OpenVINO is used from.
+
+When nothing is connected, the SDK creates and maintains its own virtual
+environment at this path (with `--system-site-packages`), so the OpenVINO
+packages registered in the system `dist-packages` are importable from it.
+
+Connect the plug to an SDK that provides a virtual environment (such as the
+`uv` SDK's `venv` slot) to use a uv-managed environment instead. The provided
+environment is mounted read-only and used as-is. See
+[Using a uv-managed venv](#using-a-uv-managed-venv).
 
 ## Slots (resources this SDK provides)
 
