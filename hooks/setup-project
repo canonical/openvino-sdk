@@ -1,6 +1,10 @@
 default_venv="$SDK/venv"
 
-if [ ! -f "$default_venv/pyvenv.cfg" ]; then
+# If the venv plug is connected, the provider SDK (for example, uv) owns and
+# creates the virtual environment at this mount point; creating one here races
+# the provider and makes its `uv venv` fail. Only create an SDK-managed venv
+# when nothing is connected.
+if ! mountpoint -q "$default_venv" && [ ! -f "$default_venv/pyvenv.cfg" ]; then
     echo "No virtual environment detected, a default one will be created in $default_venv"
     echo "Alternatively, add openvino:venv plug connection to an SDK slot that provides a virtual environment."
     echo "For example, add to your workshop.yaml:"
@@ -12,6 +16,3 @@ if [ ! -f "$default_venv/pyvenv.cfg" ]; then
     sudo apt-get install python3-venv python3-pip
     python3 -m venv --system-site-packages "$default_venv"
 fi
-
-# shellcheck source=/dev/null
-source "$default_venv/bin/activate"
