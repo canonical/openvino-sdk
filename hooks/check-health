@@ -4,19 +4,12 @@ if ! ldconfig -p | grep libopenvino >/dev/null; then
 	exit 0
 fi
 
-# Verify Python bindings are discoverable (the .pth registration worked)
-if ! python3 -c "import openvino; import openvino_genai"; then
-	workshopctl set-health --code="openvino-python-missing" error "Python bindings not discoverable"
+# Verify OpenVINO and its Python dependencies are importable from the venv --
+# the environment used by workshop shells and the jupyter SDK.
+venv_python="$SDK/venv/bin/python"
+if ! "$venv_python" -c "import openvino; import openvino_genai"; then
+	workshopctl set-health --code="openvino-python-missing" error "OpenVINO not importable from the venv at $SDK/venv"
 	exit 0
-fi
-
-# Verify OpenVINO is importable from the SDK-managed or provided venv
-venv_path="$SDK/venv"
-if [ -f "$venv_path/pyvenv.cfg" ]; then
-	if ! "$venv_path/bin/python" -c "import openvino; import openvino_genai"; then
-		workshopctl set-health --code="openvino-venv-missing" error "OpenVINO not importable in venv at $venv_path"
-		exit 0
-	fi
 fi
 
 workshopctl set-health okay

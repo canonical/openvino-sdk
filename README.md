@@ -21,7 +21,8 @@ sdks:
 
 actions:
   verify: |
-    python3 -c "from openvino import Core; print(Core().available_devices)"
+    source /var/lib/workshop/sdk/openvino/venv/bin/activate
+    python -c "from openvino import Core; print(Core().available_devices)"
 ```
 
 This demonstrates a minimal OpenVINO environment that verifies the runtime is available.
@@ -36,7 +37,11 @@ This demonstrates a minimal OpenVINO environment that verifies the runtime is av
 2. No specific project layout is needed; OpenVINO can be used with any Python or C++ project.
 3. On launch, the SDK installs Intel GPU compute drivers from the
    `ppa:kobuk-team/intel-graphics` PPA, configures `ldconfig` for OpenVINO shared libraries,
-   and registers the Python bindings via a `.pth` file. No user action is needed.
+   registers the Python bindings via a `.pth` file, and sets up a Python virtual environment
+   containing OpenVINO's dependencies. The venv is activated automatically in interactive
+   `workshop shell` sessions, so `python` and `pip` resolve to it. No user action is needed.
+   In non-interactive contexts (such as workshop `actions`), activate it explicitly with
+   `source /var/lib/workshop/sdk/openvino/venv/bin/activate`.
 
 ### Verify the runtime
 
@@ -80,10 +85,11 @@ print('GPU available:', 'GPU' in core.available_devices)
 
 ### Using a uv-managed venv
 
-By default, OpenVINO is available to the system Python and to a virtual
-environment that the SDK creates and maintains at `$SDK/venv`. The SDK-managed
-venv is created with `--system-site-packages`, so the OpenVINO packages
-provided by this SDK are importable from it.
+By default, OpenVINO and its Python dependencies are available in a virtual
+environment that the SDK creates and maintains at `$SDK/venv`. The venv is
+created with `--system-site-packages`, so the OpenVINO packages provided by
+this SDK are importable from it, and it is activated automatically in
+interactive `workshop shell` sessions.
 
 If you prefer to manage packages with `uv`, connect the `openvino:venv` plug to
 the `uv` SDK's `venv` slot. When connected, the uv SDK's virtual environment is
