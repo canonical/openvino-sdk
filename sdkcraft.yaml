@@ -57,8 +57,9 @@ parts:
       craftctl default
 
       # Copy the Python dependency constraints to the SDK root so the
-      # setup-project hook can pin packages installed into the venv.
-      cp "$CRAFT_PART_BUILD/src/bindings/python/constraints.txt" \
+      # setup-project hook can pin packages installed into the venv. OpenVINO
+      # builds out-of-source, so the file is read from the pulled sources.
+      cp "$CRAFT_PART_SRC/src/bindings/python/constraints.txt" \
         "$CRAFT_PART_INSTALL/constraints.txt"
     build-packages:
       - ca-certificates
@@ -81,6 +82,7 @@ parts:
       - rapidjson-dev
       - libva-dev
       - libsnappy-dev
+      - libze-dev
       - python3-pip
       - python3-venv
       - python3-setuptools
