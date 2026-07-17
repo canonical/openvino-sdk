@@ -31,4 +31,12 @@ cat > /etc/profile.d/openvino-venv.sh <<EOF
 if [ -f "$SDK/venv/bin/activate" ]; then
     . "$SDK/venv/bin/activate"
 fi
+
+# Honor OpenVINO's dependency constraints for any packages the user installs
+# into the venv later. PIP_CONSTRAINT is read by pip; UV_CONSTRAINT by uv
+# (uv pip / uv add).
+if [ -f "$SDK/constraints.txt" ]; then
+    export PIP_CONSTRAINT="$SDK/constraints.txt"
+    export UV_CONSTRAINT="$SDK/constraints.txt"
+fi
 EOF

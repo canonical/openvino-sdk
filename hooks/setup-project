@@ -12,11 +12,3 @@ if [ ! -f "$default_venv/pyvenv.cfg" ]; then
     sudo apt-get install python3-venv python3-pip
     python3 -m venv --system-site-packages "$default_venv"
 fi
-
-# shellcheck source=/dev/null
-source "$default_venv/bin/activate"
-
-# Install OpenVINO's Python dependencies into the venv, pinned to the versions
-# OpenVINO was built against. pip is aliased to `uv pip` when the uv SDK is
-# present; constraints.txt is copied to the SDK root by the openvino part.
-pip install numpy packaging --constraint "$SDK/constraints.txt"
