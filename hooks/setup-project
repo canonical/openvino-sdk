@@ -1,0 +1,14 @@
+default_venv="$SDK/venv"
+
+if [ ! -f "$default_venv/pyvenv.cfg" ]; then
+    echo "No virtual environment detected, a default one will be created in $default_venv"
+    echo "Alternatively, add openvino:venv plug connection to an SDK slot that provides a virtual environment."
+    echo "For example, add to your workshop.yaml:"
+    echo "  connections:"
+    echo "    - plug: openvino:venv"
+    echo "      slot: uv:venv"
+
+    sudo apt-get update
+    sudo apt-get install python3-venv python3-pip
+    python3 -m venv --system-site-packages "$default_venv"
+fi

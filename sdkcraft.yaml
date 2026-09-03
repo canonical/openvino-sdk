@@ -22,6 +22,9 @@ slots:
 plugs:
   gpu:
     interface: gpu
+  venv:
+    interface: mount
+    workshop-target: $SDK/venv
 
 parts:
   openvino:
@@ -52,6 +55,12 @@ parts:
       # openvino build requires recent version of setuptools
       pip install --upgrade setuptools --break-system-packages
       craftctl default
+
+      # Copy the Python dependency constraints to the SDK root so the
+      # setup-project hook can pin packages installed into the venv. OpenVINO
+      # builds out-of-source, so the file is read from the pulled sources.
+      cp "$CRAFT_PART_SRC/src/bindings/python/constraints.txt" \
+        "$CRAFT_PART_INSTALL/constraints.txt"
     build-packages:
       - ca-certificates
       - file
@@ -73,6 +82,7 @@ parts:
       - rapidjson-dev
       - libva-dev
       - libsnappy-dev
+      - libze-dev
       - python3-pip
       - python3-venv
       - python3-setuptools
@@ -87,11 +97,19 @@ parts:
       usr/runtime/lib/intel64/libopenvino_genai.*: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/
       usr/python/openvino_genai: usr/lib/python3/dist-packages/openvino_genai
   openvino-deps:
+    # Install OpenVINO's core Python runtime dependencies into the system
+    # dist-packages so any venv created with --system-site-packages (both the
+    # openvino and jupyter SDKs) can import them. Versions are pinned via the
+    # constraints file OpenVINO was built against, which the openvino part
+    # stages to the SDK root.
+    after: [openvino]
     source: .
     plugin: python
     python-packages:
-      - numpy==2.2.6
-      - packaging==25.0
+      - numpy
+      - packaging
+    python-constraints:
+      - $CRAFT_STAGE/constraints.txt
     organize:
       lib/python3.12/site-packages/numpy: usr/lib/python3/dist-packages/numpy
       lib/python3.12/site-packages/numpy.libs: usr/lib/python3/dist-packages/numpy.libs
@@ -117,3 +135,10 @@ parts:
       cp -r $CRAFT_PART_BUILD/python $CRAFT_PART_INSTALL
     organize:
       python/openvino_tokenizers: usr/lib/python3/dist-packages/openvino_tokenizers
+  venv:
+    # Provide an empty mountpoint for the venv plug. When a venv is connected
+    # (for example, from the uv SDK) it is mounted here; otherwise the
+    # setup-base hook creates and maintains an SDK-managed venv at this path.
+    plugin: nil
+    override-prime: |
+      mkdir -p "$CRAFT_PRIME/venv"
