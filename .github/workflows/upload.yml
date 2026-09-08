@@ -22,6 +22,7 @@ jobs:
       platforms: '["amd64"]'
       platform-flag: "--build-for"
       risk: stable
+      promote-to-latest: true
     secrets:
       SDKCRAFT_STORE_CREDENTIALS: ${{ secrets.SDKCRAFT_STORE_CREDENTIALS_PROD }}
   build-and-upload-arm64:
@@ -31,5 +32,6 @@ jobs:
       platform-flag: "--build-for"
       runs-on: '["self-hosted-linux-arm64-noble-xlarge"]'
       risk: stable
+      promote-to-latest: true
     secrets:
       SDKCRAFT_STORE_CREDENTIALS: ${{ secrets.SDKCRAFT_STORE_CREDENTIALS_PROD }}
